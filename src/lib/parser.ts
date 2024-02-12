@@ -185,6 +185,15 @@ function parseNumberExpression(tokens: Token[]): AST {
 }
 
 function parseParentheses(tokens: Token[]): AST {
+    if (tokens.length == 5 && tokens[2].type == TokenType.Separator) return {
+        type: ASTType.Point,
+        value: null,
+        parts: [
+            createSyntaxTree([tokens[1]]),
+            createSyntaxTree([tokens[3]])
+        ]
+    }
+
     if (tokens.at(-1)?.type == TokenType.ParenClose) return createSyntaxTree(tokens.slice(1, -1));
 
     return parseNumberStart(tokens);
