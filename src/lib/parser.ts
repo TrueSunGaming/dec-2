@@ -62,6 +62,10 @@ function parseSplit(tokens: Token[]): AST {
     switch(tokens[0].type) {
         case TokenType.Number:
             return parseNumberStart(tokens);
+        case TokenType.ParenOpen:
+            return parseParentheses(tokens);
+        case TokenType.Identifier:
+            return parseIndentifierStart(tokens);
         default:
             return res;
     }
@@ -81,6 +85,59 @@ function parseNumberStart(tokens: Token[]): AST {
     }
 
     if (tokens.length >= 3) return parseNumberExpression(tokens);
+
+    return res;
+}
+
+function parseIndentifierStart(tokens: Token[]): AST {
+    const res: AST = {
+        type: ASTType.Program,
+        parts: [],
+        value: null
+    };
+
+    if (tokens.length == 1) {
+        res.type = ASTType.Access;
+        res.value = tokens[0].value;
+        return res;
+    }
+
+    let extraTokens = 0;
+
+    if (tokens[1].type == TokenType.ParenOpen) {
+        let nesting = 0;
+        let close = -1;
+        for (let i = 1; i < tokens.length; i++) {
+            if (tokens[i].type == TokenType.ParenOpen) nesting++;
+            if (tokens[i].type == TokenType.ParenClose) {
+                nesting--;
+                if (nesting == 0) close = i;
+                extraTokens = i;
+                break;
+            }
+        }
+
+        const paramTokens: Token[] = tokens.slice(2, close);
+        const params: Token[][] = [];
+        let start = 0;
+        for (let i = 0; i < paramTokens.length; i++) {
+            if (paramTokens[i].type != TokenType.Separator) continue;
+            start = i + 1;
+            params.push(paramTokens.slice(start, i)); 
+        }
+
+        params.push(paramTokens.slice(start));
+
+        const filtered: Token[][] = params.filter((v) => v.length > 0);
+
+        console.log(filtered);
+
+        res.type = ASTType.Call;
+        res.value = tokens[0].value;
+        res.parts = filtered.map(createSyntaxTree);
+    }
+
+    if (tokens.length >= 3 + extraTokens) return parseNumberExpression(tokens);
 
     return res;
 }
@@ -116,7 +173,19 @@ function parseNumberExpression(tokens: Token[]): AST {
 
     console.log(operations);
 
-    res.type = operatorAST.get(operations.at(-1)![0])!;
+    const lastOperation: [string, number, number] = operations.at(-1)!;
+
+    res.type = operatorAST.get(lastOperation[0])!;
+    res.parts = [
+        createSyntaxTree(tokens.slice(0, lastOperation[1])),
+        createSyntaxTree(tokens.slice(lastOperation[1] + 1))
+    ];
 
     return res;
+}
+
+function parseParentheses(tokens: Token[]): AST {
+    if (tokens.at(-1)?.type == TokenType.ParenClose) return createSyntaxTree(tokens.slice(1, -1));
+
+    return parseNumberStart(tokens);
 }

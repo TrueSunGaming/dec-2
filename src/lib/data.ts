@@ -92,5 +92,6 @@ export enum KeywordType {
 export const keywordTypes: Map<string, KeywordType> = new Map([
     ["let", KeywordType.Normal],
     ["function", KeywordType.Block],
+    ["action", KeywordType.Block],
     ["macro", KeywordType.Block],
 ]);

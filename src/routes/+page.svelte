@@ -4,7 +4,7 @@
     import { createSyntaxTree } from "$lib/parser"
 
     const tokens: PositionedToken[] = generateTokens(`
-        1 * (1 + 2 * 4 * 6);
+        f(x) + 2;
     `);
 
     const ast: AST = createSyntaxTree(tokens);
