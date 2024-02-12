@@ -1,3 +1,3 @@
 export function desmosFormat(identifier: string): string {
-    return identifier[0] + "_{" + identifier.slice(1) + "}";
+    return identifier.length > 1 ? identifier[0] + "_{" + identifier.slice(1) + "}" : identifier;
 }

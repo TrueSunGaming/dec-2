@@ -25,7 +25,7 @@ export function compile(ast: AST): string {
             return `(${compile(ast.parts[0])}-${compile(ast.parts[1])})`;
 
         case ASTType.Multiply:
-            return `(${compile(ast.parts[0])}\\cdot${compile(ast.parts[1])})`;
+            return `(${compile(ast.parts[0])}\\cdot ${compile(ast.parts[1])})`;
 
         case ASTType.Divide:
             return `(\\frac{${compile(ast.parts[0])}}{${compile(ast.parts[1])}})`;
@@ -43,7 +43,7 @@ export function compile(ast: AST): string {
             return `${desmosFormat(ast.value ?? "")}\\to(${desmosFormat(ast.value ?? "")}-${compile(ast.parts[0])})`;            
 
         case ASTType.MultiplyAssign:
-            return `${desmosFormat(ast.value ?? "")}\\to(${desmosFormat(ast.value ?? "")}\\cdot${compile(ast.parts[0])})`; 
+            return `${desmosFormat(ast.value ?? "")}\\to(${desmosFormat(ast.value ?? "")}\\cdot ${compile(ast.parts[0])})`; 
         
         case ASTType.DivideAssign:
             return `${desmosFormat(ast.value ?? "")}\\to(\\frac{${desmosFormat(ast.value ?? "")}}{${compile(ast.parts[0])}})`;
@@ -77,6 +77,12 @@ export function compile(ast: AST): string {
         
         case ASTType.MacroDeclare:
             return ""; // TODO
+        
+        case ASTType.List:
+            return `[${ast.parts.map(compile).join(",")}]`;
+        
+        case ASTType.Point:
+            return `(${compile(ast.parts[0])},${compile(ast.parts[1])})`;
 
         default:
             return "";
@@ -84,5 +90,11 @@ export function compile(ast: AST): string {
 }
 
 export function compileFormat(res: string): string {
-    return res.replace(/\(/g, "\\left(").replace(/\)/g, "\\right)");
+    return res
+        .replace(/\(/g, "\\left(")
+        .replace(/\)/g, "\\right)")
+        .replace(/\[/g, "\\left[")
+        .replace(/\]/g, "\\right]")
+        .replace(/\\\{/g, "\\left\\{")
+        .replace(/\\\}/g, "\\right\\}");
 }

@@ -23,7 +23,9 @@ export enum ASTType {
     NumberLiteral,
     ActionDeclare,
     EndParameters,
-    MacroDeclare
+    MacroDeclare,
+    List,
+    Point
 }
 
 export interface AST {
