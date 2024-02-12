@@ -69,7 +69,7 @@ export const orderOfOperations: Map<Operator, OperationType> = new Map([
     [Operator.Assign,         OperationType.Assignment],
     [Operator.AddAssign,      OperationType.Assignment],
     [Operator.SubtractAssign, OperationType.Assignment],
-    [Operator.MutliplyAssign, OperationType.Assignment],
+    [Operator.MultiplyAssign, OperationType.Assignment],
     [Operator.DivideAssign,   OperationType.Assignment],
     [Operator.ExponentAssign, OperationType.Assignment],
     [Operator.Equal,          OperationType.Comparison],
