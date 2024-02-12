@@ -21,7 +21,9 @@ export enum ASTType {
     Less,
     LessOrEqual,
     NumberLiteral,
-    ActionDeclare
+    ActionDeclare,
+    EndParameters,
+    MacroDeclare
 }
 
 export interface AST {
