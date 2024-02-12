@@ -12,7 +12,7 @@ export enum ASTType {
     Assign,
     AddAssign,
     SubtractAssign,
-    MutliplyAssign,
+    MultiplyAssign,
     DivideAssign,
     ExponentAssign,
     Equal,

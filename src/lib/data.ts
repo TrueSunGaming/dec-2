@@ -9,7 +9,7 @@ export enum Operator {
     Assign,
     AddAssign,
     SubtractAssign,
-    MutliplyAssign,
+    MultiplyAssign,
     DivideAssign,
     ExponentAssign,
     Equal,
@@ -22,7 +22,7 @@ export enum Operator {
 export const operatorMap: Map<string, Operator> = new Map([
     ["+=", Operator.AddAssign],
     ["-=", Operator.SubtractAssign],
-    ["*=", Operator.MutliplyAssign],
+    ["*=", Operator.MultiplyAssign],
     ["/=", Operator.DivideAssign],
     ["^=", Operator.ExponentAssign],
     ["==", Operator.Equal],
@@ -41,7 +41,7 @@ export const operatorMap: Map<string, Operator> = new Map([
 export const operatorAST: Map<string, ASTType> = new Map([
     ["+=", ASTType.AddAssign],
     ["-=", ASTType.SubtractAssign],
-    ["*=", ASTType.MutliplyAssign],
+    ["*=", ASTType.MultiplyAssign],
     ["/=", ASTType.DivideAssign],
     ["^=", ASTType.ExponentAssign],
     ["==", ASTType.Equal],
