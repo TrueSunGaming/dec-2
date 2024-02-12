@@ -20,7 +20,8 @@ export enum ASTType {
     GreaterOrEqual,
     Less,
     LessOrEqual,
-    NumberLiteral
+    NumberLiteral,
+    ActionDeclare
 }
 
 export interface AST {
