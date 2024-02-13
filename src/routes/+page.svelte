@@ -5,12 +5,17 @@
     import { compile, compileFormat } from "$lib/compiler";
 
     const tokens: PositionedToken[] = generateTokens(`
-        (1, 2);
+        function skibidi(rizz, gyatt) rizz ^ gyatt;
+        skibidi(x, y) > 5;
     `);
 
+    console.log(tokens);
+
     const ast: AST = createSyntaxTree(tokens);
+
+    console.log(ast);
 
     const res: string = compileFormat(compile(ast));
 </script>
 
-{ res }
+{ @html res.replace(/\n/g, "<br>") }

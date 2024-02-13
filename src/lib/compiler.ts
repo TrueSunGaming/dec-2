@@ -11,12 +11,12 @@ export function compile(ast: AST): string {
 
         case ASTType.Call:
             return `${desmosFormat(ast.value ?? "")}(${ast.parts.map(compile).join(",")})`;
-
+        
         case ASTType.Define:
-            return `${desmosFormat(ast.value ?? "")}=${compile(ast.parts[0])}`;
+            return `${desmosFormat(ast.value ?? "")}(${ast.parts.slice(0, -1).map(compile).join(",")})=${compile(ast.parts.at(-1)!)}`;
 
         case ASTType.Declare:
-            return `${desmosFormat(ast.value ?? "")}(${ast.parts.slice(0, -1).map(compile).join(",")})=${compile(ast.parts.at(-1)!)}`;
+            return `${desmosFormat(ast.value ?? "")}=${compile(ast.parts[0])}`;
 
         case ASTType.Add:
             return `(${compile(ast.parts[0])}+${compile(ast.parts[1])})`;
@@ -34,37 +34,37 @@ export function compile(ast: AST): string {
             return `(${compile(ast.parts[0])}^{${compile(ast.parts[1])}})`;
 
         case ASTType.Assign:
-            return `${desmosFormat(ast.value ?? "")}\\to${compile(ast.parts[0])}`;
+            return `${compile(ast.parts[0])}\\to${compile(ast.parts[1])}`;
 
         case ASTType.AddAssign:
-            return `${desmosFormat(ast.value ?? "")}\\to(${desmosFormat(ast.value ?? "")}+${compile(ast.parts[0])})`;            
+            return `${compile(ast.parts[0])}\\to(${compile(ast.parts[0])}+${compile(ast.parts[1])})`;            
 
         case ASTType.SubtractAssign:
-            return `${desmosFormat(ast.value ?? "")}\\to(${desmosFormat(ast.value ?? "")}-${compile(ast.parts[0])})`;            
+            return `${compile(ast.parts[0])}\\to(${compile(ast.parts[0])}-${compile(ast.parts[1])})`;            
 
         case ASTType.MultiplyAssign:
-            return `${desmosFormat(ast.value ?? "")}\\to(${desmosFormat(ast.value ?? "")}\\cdot ${compile(ast.parts[0])})`; 
+            return `${compile(ast.parts[0])}\\to(${compile(ast.parts[0])}\\cdot ${compile(ast.parts[1])})`; 
         
         case ASTType.DivideAssign:
-            return `${desmosFormat(ast.value ?? "")}\\to(\\frac{${desmosFormat(ast.value ?? "")}}{${compile(ast.parts[0])}})`;
+            return `${compile(ast.parts[0])}\\to(\\frac{${compile(ast.parts[0])}}{${compile(ast.parts[1])}})`;
         
         case ASTType.ExponentAssign:
-            return `${desmosFormat(ast.value ?? "")}\\to(${desmosFormat(ast.value ?? "")}^{${compile(ast.parts[0])}})`;
+            return `${compile(ast.parts[0])}\\to(${compile(ast.parts[0])}^{${compile(ast.parts[1])}})`;
         
         case ASTType.Equal:
-            return `(${desmosFormat(ast.value ?? "")}=${compile(ast.parts[0])})`;
+            return `${compile(ast.parts[0])}=${compile(ast.parts[1])}`;
         
         case ASTType.Less:
-            return `(${desmosFormat(ast.value ?? "")}<${compile(ast.parts[0])})`;
+            return `${compile(ast.parts[0])}<${compile(ast.parts[1])}`;
         
         case ASTType.LessOrEqual:
-            return `(${desmosFormat(ast.value ?? "")}\\le${compile(ast.parts[0])})`;
+            return `${compile(ast.parts[0])}\\le${compile(ast.parts[1])}`;
         
         case ASTType.Greater:
-            return `(${desmosFormat(ast.value ?? "")}>${compile(ast.parts[0])})`;
+            return `${compile(ast.parts[0])}>${compile(ast.parts[1])}`;
             
         case ASTType.GreaterOrEqual:
-            return `(${desmosFormat(ast.value ?? "")}\\ge${compile(ast.parts[0])})`;
+            return `${compile(ast.parts[0])}\\ge${compile(ast.parts[1])}`;
         
         case ASTType.NumberLiteral:
             return ast.value ?? "";

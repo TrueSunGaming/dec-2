@@ -66,6 +66,10 @@ function parseSplit(tokens: Token[]): AST {
             return parseParentheses(tokens);
         case TokenType.Identifier:
             return parseIndentifierStart(tokens);
+        case TokenType.SquareOpen:
+            return parseSquare(tokens);
+        case TokenType.Keyword:
+            return parseKeyword(tokens);
         default:
             return res;
     }
@@ -122,15 +126,13 @@ function parseIndentifierStart(tokens: Token[]): AST {
         let start = 0;
         for (let i = 0; i < paramTokens.length; i++) {
             if (paramTokens[i].type != TokenType.Separator) continue;
-            start = i + 1;
             params.push(paramTokens.slice(start, i)); 
+            start = i + 1;
         }
 
         params.push(paramTokens.slice(start));
 
         const filtered: Token[][] = params.filter((v) => v.length > 0);
-
-        console.log(filtered);
 
         res.type = ASTType.Call;
         res.value = tokens[0].value;
@@ -160,7 +162,7 @@ function parseNumberExpression(tokens: Token[]): AST {
         if (operatorMap.has(tokens[i].value)) operations.push([tokens[i].value, i, parenthesesLayer]);
     }
 
-    if (operations.length < 1) throw new Error("No operation found in expression.");
+    if (operations.length < 1) throw new Error(`No operation found in expression.`);
 
     operations.sort((a, b) => {
         if (a[2] != b[2]) return b[2] - a[2];
@@ -170,8 +172,6 @@ function parseNumberExpression(tokens: Token[]): AST {
 
         return typeA == typeB ? a[1] - b[1] : typeB - typeA;
     });
-
-    console.log(operations);
 
     const lastOperation: [string, number, number] = operations.at(-1)!;
 
@@ -185,16 +185,78 @@ function parseNumberExpression(tokens: Token[]): AST {
 }
 
 function parseParentheses(tokens: Token[]): AST {
-    if (tokens.length == 5 && tokens[2].type == TokenType.Separator) return {
-        type: ASTType.Point,
-        value: null,
-        parts: [
-            createSyntaxTree([tokens[1]]),
-            createSyntaxTree([tokens[3]])
-        ]
+    if (tokens.at(-1)?.type != TokenType.ParenClose) return parseNumberStart(tokens);
+
+    if (tokens.length >= 5 && tokens.some((v) => v.type == TokenType.Separator)) {
+        const separatorPosition: number = tokens.findIndex((v) => v.type == TokenType.Separator);
+
+        return {
+            type: ASTType.Point,
+            value: null,
+            parts: [
+                createSyntaxTree(tokens.slice(1, separatorPosition)),
+                createSyntaxTree(tokens.slice(separatorPosition + 1, -1))
+            ]
+        }
+    } 
+
+    return createSyntaxTree(tokens.slice(1, -1));
+}
+
+function parseSquare(tokens: Token[]): AST {
+    if (tokens.at(-1)?.type != TokenType.SquareClose) return parseNumberStart(tokens);
+
+    const separators: number[] = [];
+
+    for (let i = 0; i < tokens.length; i++) if (tokens[i].type == TokenType.Separator) separators.push(i);
+
+    const splits: Token[][] = [];
+
+    let start = 1;
+    for (const i of separators) {
+        splits.push(tokens.slice(start, i));
+        start = i + 1;
     }
+    
+    return {
+        type: ASTType.List,
+        value: null,
+        parts: splits.map(createSyntaxTree)
+    };
+}
 
-    if (tokens.at(-1)?.type == TokenType.ParenClose) return createSyntaxTree(tokens.slice(1, -1));
+function parseKeyword(tokens: Token[]): AST {
+    switch(tokens[0].value) {
+        case "let":
+            return parseLet(tokens);
+        case "function":
+            return parseFunction(tokens);
+        default:
+            throw new Error(`Unknown keyword ${tokens[0].value}`);
+    }
+}
 
-    return parseNumberStart(tokens);
+function parseLet(tokens: Token[]): AST {
+    return {
+        type: ASTType.Declare,
+        value: tokens[1].value,
+        parts: [createSyntaxTree(tokens.slice(3))]
+    }
+}
+
+function parseFunction(tokens: Token[]): AST {
+
+    const res: AST = {
+        type: ASTType.Define,
+        value: tokens[1].value,
+        parts: []
+    };
+
+    const endParam: number = tokens.findIndex((v) => v.type == TokenType.ParenClose);
+
+    for (let i = 3; i < endParam; i += 2) res.parts.push(createSyntaxTree([tokens[i]]));
+
+    res.parts.push(createSyntaxTree(tokens.slice(endParam + 1)));
+
+    return res;
 }
