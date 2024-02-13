@@ -115,9 +115,11 @@ function parseIndentifierStart(tokens: Token[]): AST {
             if (tokens[i].type == TokenType.ParenOpen) nesting++;
             if (tokens[i].type == TokenType.ParenClose) {
                 nesting--;
-                if (nesting == 0) close = i;
-                extraTokens = i;
-                break;
+                if (nesting == 0) {
+                    close = i;
+                    extraTokens = i;
+                    break;
+                }
             }
         }
 

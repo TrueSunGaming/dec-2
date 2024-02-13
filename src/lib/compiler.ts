@@ -1,4 +1,5 @@
 import { ASTType, type AST } from "./AST";
+import { stdlib } from "./data";
 import { desmosFormat } from "./desmosFormat";
 
 export function compile(ast: AST): string {
@@ -10,7 +11,13 @@ export function compile(ast: AST): string {
             return desmosFormat(ast.value ?? "");
 
         case ASTType.Call:
-            return `${desmosFormat(ast.value ?? "")}(${ast.parts.map(compile).join(",")})`;
+            if (!stdlib.has(ast.value ?? "")) return `${desmosFormat(ast.value ?? "")}(${ast.parts.map(compile).join(",")})`;
+
+            return (() => {
+                let res: string = stdlib.get(ast.value!)!;
+                for (let i = 0; i < ast.parts.length; i++) res = res.replace(`%%${i}%%`, compile(ast.parts[i]));
+                return res;
+            })();
         
         case ASTType.Define:
             return `${desmosFormat(ast.value ?? "")}(${ast.parts.slice(0, -1).map(compile).join(",")})=${compile(ast.parts.at(-1)!)}`;

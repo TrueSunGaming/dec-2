@@ -95,3 +95,10 @@ export const keywordTypes: Map<string, KeywordType> = new Map([
     ["action", KeywordType.Block],
     ["macro", KeywordType.Block],
 ]);
+
+// %%n%% -> replaced by nth argument
+export const stdlib: Map<string, string> = new Map([
+    ["ternary", "\\{%%0%%:%%1%%,%%2%%\\}"],
+    ["pi", "\\pi"],
+    ["tau", "\\tau"]
+]);
