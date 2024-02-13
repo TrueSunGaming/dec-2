@@ -7,6 +7,10 @@
     const tokens: PositionedToken[] = generateTokens(`
         function skibidi(rizz, gyatt) rizz ^ gyatt;
         skibidi(x, y) > 5;
+
+        
+        x1 == 1;
+        function increment() x1 += 1;
     `);
 
     console.log(tokens);

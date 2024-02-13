@@ -27,7 +27,6 @@ export interface PositionedToken extends Token {
 }
 
 const tokenMap: Map<RegExp, TokenType> = new Map([
-    [/[\d.]+/g, TokenType.Number],
     [/\(/g, TokenType.ParenOpen],
     [/\)/g, TokenType.ParenClose],
     [/\{/g, TokenType.CurlyOpen],
@@ -39,6 +38,7 @@ const tokenMap: Map<RegExp, TokenType> = new Map([
     [new RegExp(Array.from(keywordTypes.keys()).map(escapeRegExp).join("|"), "g"), TokenType.Keyword],
     [new RegExp(Array.from(operatorMap.keys()).map(escapeRegExp).join("|"), "g"), TokenType.Operator],
     [/[a-zA-Z]+([a-zA-Z\d]+)?/g, TokenType.Identifier],
+    [/[\d.]+/g, TokenType.Number],
 ]);
 
 export function generateTokens(str: string): PositionedToken[] {
