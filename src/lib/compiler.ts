@@ -69,13 +69,13 @@ export function compile(ast: AST): string {
         case ASTType.NumberLiteral:
             return ast.value ?? "";
         
-        case ASTType.ActionDeclare:
+        case ASTType.ActionDefine:
             return (() => {
                 const paramLength: number = ast.parts.findIndex((v) => v.type == ASTType.EndParameters);
                 return `${desmosFormat(ast.value ?? "")}(${ast.parts.slice(0, paramLength).map(compile).join(",")})=${ast.parts.slice(paramLength + 1).map(compile).join(",")}`;
             })();
         
-        case ASTType.MacroDeclare:
+        case ASTType.MacroDefine:
             return ""; // TODO
         
         case ASTType.List:

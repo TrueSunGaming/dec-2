@@ -5,12 +5,17 @@
     import { compile, compileFormat } from "$lib/compiler";
 
     const tokens: PositionedToken[] = generateTokens(`
-        function skibidi(rizz, gyatt) rizz ^ gyatt;
-        skibidi(x, y) > 5;
+        let m = 1;
+        let b = 0;
+        let y = m * x + b;
+        let level10KaiCenatGyattOnlyInOhio = 1;
 
-        
-        x1 == 1;
-        function increment() x1 += 1;
+        action skibidiRizz(x) {
+            m += x;
+            b += x;
+        };
+
+        skibidiRizz(level10KaiCenatGyattOnlyInOhio);
     `);
 
     console.log(tokens);
@@ -23,3 +28,6 @@
 </script>
 
 { @html res.replace(/\n/g, "<br>") }
+
+<pre>{ JSON.stringify(tokens, null, 2) }</pre>
+<pre>{ JSON.stringify(ast, null, 2) }</pre>
