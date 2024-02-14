@@ -126,8 +126,21 @@ function parseIndentifierStart(tokens: Token[]): AST {
         const paramTokens: Token[] = tokens.slice(2, close);
         const params: Token[][] = [];
         let start = 0;
+        let paramNesting = 0;
         for (let i = 0; i < paramTokens.length; i++) {
-            if (paramTokens[i].type != TokenType.Separator) continue;
+            if (
+                paramTokens[i].type == TokenType.ParenOpen ||
+                paramTokens[i].type == TokenType.SquareOpen ||
+                paramTokens[i].type == TokenType.CurlyOpen
+            ) paramNesting++;
+    
+            if (
+                paramTokens[i].type == TokenType.ParenClose ||
+                paramTokens[i].type == TokenType.SquareClose ||
+                paramTokens[i].type == TokenType.CurlyClose
+            ) paramNesting--;
+
+            if (paramNesting != 0 || paramTokens[i].type != TokenType.Separator) continue;
             params.push(paramTokens.slice(start, i)); 
             start = i + 1;
         }
@@ -187,7 +200,20 @@ function parseNumberExpression(tokens: Token[]): AST {
 }
 
 function parseParentheses(tokens: Token[]): AST {
-    if (tokens.at(-1)?.type != TokenType.ParenClose) return parseNumberStart(tokens);
+    let closeParen = -1;
+    let nesting = 0;
+    for (let i = 0; i < tokens.length; i++) {
+        if (tokens[i].type == TokenType.ParenOpen) nesting++;
+        if (tokens[i].type == TokenType.ParenClose) {
+            nesting--;
+            if (nesting == 0) {
+                closeParen = i;
+                break;
+            }
+        }
+    }
+
+    if (closeParen != tokens.length - 1) return parseNumberStart(tokens);
 
     if (tokens.length >= 5 && tokens.some((v) => v.type == TokenType.Separator)) {
         const separatorPosition: number = tokens.findIndex((v) => v.type == TokenType.Separator);
@@ -206,11 +232,39 @@ function parseParentheses(tokens: Token[]): AST {
 }
 
 function parseSquare(tokens: Token[]): AST {
-    if (tokens.at(-1)?.type != TokenType.SquareClose) return parseNumberStart(tokens);
+    let closeSquare = -1;
+    let nesting = 0;
+    for (let i = 0; i < tokens.length; i++) {
+        if (tokens[i].type == TokenType.SquareOpen) nesting++;
+        if (tokens[i].type == TokenType.SquareClose) {
+            nesting--;
+            if (nesting == 0) {
+                closeSquare = i;
+                break;
+            }
+        }
+    }
+
+    if (closeSquare != tokens.length - 1) return parseNumberStart(tokens);
 
     const separators: number[] = [];
 
-    for (let i = 0; i < tokens.length; i++) if (tokens[i].type == TokenType.Separator) separators.push(i);
+    let paramNesting = 0;
+    for (let i = 0; i < tokens.length; i++) {
+        if (
+            tokens[i].type == TokenType.ParenOpen ||
+            tokens[i].type == TokenType.SquareOpen ||
+            tokens[i].type == TokenType.CurlyOpen
+        ) paramNesting++;
+
+        if (
+            tokens[i].type == TokenType.ParenClose ||
+            tokens[i].type == TokenType.SquareClose ||
+            tokens[i].type == TokenType.CurlyClose
+        ) paramNesting--;
+
+        if (paramNesting == 0 && tokens[i].type == TokenType.Separator) separators.push(i);
+    }
 
     const splits: Token[][] = [];
 
@@ -219,6 +273,8 @@ function parseSquare(tokens: Token[]): AST {
         splits.push(tokens.slice(start, i));
         start = i + 1;
     }
+
+    splits.push(tokens.slice(start, -1));
     
     return {
         type: ASTType.List,

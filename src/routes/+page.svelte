@@ -5,7 +5,7 @@
     import { compile, compileFormat } from "$lib/compiler";
 
     const tokens: PositionedToken[] = generateTokens(`
-        f(pi(), tau());
+        map([1, 2, 3], i, 2 * i);
     `);
 
     const ast: AST = createSyntaxTree(tokens);

@@ -98,7 +98,58 @@ export const keywordTypes: Map<string, KeywordType> = new Map([
 
 // %%n%% -> replaced by nth argument
 export const stdlib: Map<string, string> = new Map([
-    ["ternary", "\\{%%0%%:%%1%%,%%2%%\\}"],
+    ["if", "\\{%%0%%:%%1%%,%%2%%\\}"],
+
     ["pi", "\\pi"],
-    ["tau", "\\tau"]
+    ["tau", "\\tau"],
+
+    ["sqrt", "\\sqrt{%%0%%}"],
+    ["cbrt", "\\sqrt[3]{%%0%%}"],
+    ["root", "\\sqrt[%%1%%]{%%0%%}"],
+
+    ["sin", "\\sin(%%0%%)"],
+    ["cos", "\\cos(%%0%%)"],
+    ["tan", "\\tan(%%0%%)"],
+    ["csc", "\\csc(%%0%%)"],
+    ["sec", "\\sec(%%0%%)"],
+    ["cot", "\\cot(%%0%%)"],
+    ["sin2", "\\sin^{2}(%%0%%)"],
+    ["cos2", "\\cos^{2}(%%0%%)"],
+    ["tan2", "\\tan^{2}(%%0%%)"],
+    ["csc2", "\\csc^{2}(%%0%%)"],
+    ["sec2", "\\sec^{2}(%%0%%)"],
+    ["cot2", "\\cot^{2}(%%0%%)"],
+    ["arcsin", "\\arcsin(%%0%%)"],
+    ["arccos", "\\arccos(%%0%%)"],
+    ["arctan", "\\arctan(%%0%%)"],
+    ["arccsc", "\\operatorname{arccsc}(%%0%%)"],
+    ["arcsec", "\\operatorname{arcsec}(%%0%%)"],
+    ["arccot", "\\operatorname{arccot}(%%0%%)"],
+    ["atan2", "\\arctan(%%0%%,%%1%%)"],
+
+    ["mean", "\\operatorname{mean}(%%0%%)"],
+    ["median", "\\operatorname{median}(%%0%%)"],
+    ["min", "\\operatorname{min}(%%0%%)"],
+    ["max", "\\operatorname{max}(%%0%%)"],
+    ["quartile", "\\operatorname{quartile}(%%0%%,%%1%%)"],
+    ["quantile", "\\operatorname{quantile}(%%0%%,%%1%%)"],
+    ["stdev", "\\operatorname{stdev}(%%0%%)"],
+    ["stdevp", "\\operatorname{stdevp}(%%0%%)"],
+    ["var", "\\operatorname{var}(%%0%%)"],
+    ["mad", "\\operatorname{mad}(%%0%%)"],
+    ["cov", "\\operatorname{cov}(%%0%%,%%1%%)"],
+    ["covp", "\\operatorname{covp}(%%0%%,%%1%%)"],
+    ["corr", "\\operatorname{corr}(%%0%%,%%1%%)"],
+    ["spearman", "\\operatorname{spearman}(%%0%%,%%1%%)"],
+    ["count", "\\operatorname{count}(%%0%%)"],
+    ["total", "\\operatorname{total}(%%0%%)"],
+
+    ["join", "\\operatorname{join}(%%0%%,%%1%%)"],
+    ["sort", "\\operatorname{sort}(%%0%%)"],
+    ["shuffle", "\\operatorname{shuffle}(%%0%%)"],
+    ["unique", "\\operatorname{unique}(%%0%%)"],
+    // \left[\left(i\right)\operatorname{for}i=A\right]
+    ["map", "[(%%2%%)\\operatorname{for}%%1%%=%%0%%]"],
+
+    ["normaldist", "\\operatorname{normaldist}(%%0%%,%%1%%)"],
 ]);
