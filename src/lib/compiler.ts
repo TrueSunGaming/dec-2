@@ -1,6 +1,8 @@
 import { ASTType, type AST } from "./AST";
 import { stdlib } from "./data";
 import { desmosFormat } from "./desmosFormat";
+import { generateTokens } from "./lexer";
+import { createSyntaxTree } from "./parser";
 
 export function compile(ast: AST): string {
     switch(ast.type) {
@@ -15,7 +17,7 @@ export function compile(ast: AST): string {
 
             return (() => {
                 let res: string = stdlib.get(ast.value!)!;
-                for (let i = 0; i < ast.parts.length; i++) res = res.replace(`%%${i}%%`, compile(ast.parts[i]));
+                for (let i = 0; i < ast.parts.length; i++) res = res.replaceAll(`%%${i}%%`, compile(ast.parts[i]));
                 return res;
             })();
         
@@ -39,6 +41,9 @@ export function compile(ast: AST): string {
 
         case ASTType.Exponent:
             return `(${compile(ast.parts[0])}^{${compile(ast.parts[1])}})`;
+        
+        case ASTType.Modulo:
+            return `\\operatorname{mod}(${compile(ast.parts[0])},${compile(ast.parts[1])})`;
 
         case ASTType.Assign:
             return `${compile(ast.parts[0])}\\to${compile(ast.parts[1])}`;
@@ -57,6 +62,9 @@ export function compile(ast: AST): string {
         
         case ASTType.ExponentAssign:
             return `${compile(ast.parts[0])}\\to(${compile(ast.parts[0])}^{${compile(ast.parts[1])}})`;
+        
+        case ASTType.ModuloAssign:
+            return `${compile(ast.parts[0])}\\to\\operatorname{mod}(${compile(ast.parts[0])},${compile(ast.parts[1])})`;
         
         case ASTType.Equal:
             return `${compile(ast.parts[0])}=${compile(ast.parts[1])}`;
@@ -104,4 +112,8 @@ export function compileFormat(res: string): string {
         .replace(/\]/g, "\\right]")
         .replace(/\\\{/g, "\\left\\{")
         .replace(/\\\}/g, "\\right\\}");
+}
+
+export function fullCompile(code: string): string {
+    return compileFormat(compile(createSyntaxTree(generateTokens(code))));
 }

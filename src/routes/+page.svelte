@@ -1,19 +1,21 @@
 <script lang="ts">
-    import { generateTokens, type PositionedToken } from "$lib/lexer";
-    import type { AST } from "$lib/AST";
-    import { createSyntaxTree } from "$lib/parser";
-    import { compile, compileFormat } from "$lib/compiler";
+    import * as monaco from "monaco-editor";
+    import { onMount } from "svelte";
 
-    const tokens: PositionedToken[] = generateTokens(`
-        map([(1, 1), (2, 2), (3, 3)], i, 2 * i);
-    `);
+    let editorEl: HTMLDivElement;
 
-    const ast: AST = createSyntaxTree(tokens);
-
-    const res: string = compileFormat(compile(ast));
+    onMount(() => {
+        monaco.editor.create(editorEl);
+    });
 </script>
 
-{ @html res.replace(/\n/g, "<br>") }
+<div bind:this={ editorEl }></div>
 
-<pre>{ JSON.stringify(tokens, null, 2) }</pre>
-<pre>{ JSON.stringify(ast, null, 2) }</pre>
+<style lang="scss">
+    div {
+        height: 100vh;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+</style>

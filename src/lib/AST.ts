@@ -25,7 +25,9 @@ export enum ASTType {
     EndParameters,
     MacroDefine,
     List,
-    Point
+    Point,
+    Modulo,
+    ModuloAssign
 }
 
 export interface AST {

@@ -16,7 +16,9 @@ export enum Operator {
     Greater,
     GreaterOrEqual,
     Less,
-    LessOrEqual
+    LessOrEqual,
+    Modulo,
+    ModuloAssign
 }
 
 export const operatorMap: Map<string, Operator> = new Map([
@@ -25,6 +27,7 @@ export const operatorMap: Map<string, Operator> = new Map([
     ["*=", Operator.MultiplyAssign],
     ["/=", Operator.DivideAssign],
     ["^=", Operator.ExponentAssign],
+    ["%=", Operator.ModuloAssign],
     ["==", Operator.Equal],
     [">=", Operator.GreaterOrEqual],
     [">", Operator.Greater],
@@ -35,6 +38,7 @@ export const operatorMap: Map<string, Operator> = new Map([
     ["*", Operator.Multiply],
     ["/", Operator.Divide],
     ["^", Operator.Exponent],
+    ["%", Operator.Modulo],
     ["=", Operator.Assign]
 ]);
 
@@ -44,6 +48,7 @@ export const operatorAST: Map<string, ASTType> = new Map([
     ["*=", ASTType.MultiplyAssign],
     ["/=", ASTType.DivideAssign],
     ["^=", ASTType.ExponentAssign],
+    ["%=", ASTType.ModuloAssign],
     ["==", ASTType.Equal],
     [">=", ASTType.GreaterOrEqual],
     [">", ASTType.Greater],
@@ -54,6 +59,7 @@ export const operatorAST: Map<string, ASTType> = new Map([
     ["*", ASTType.Multiply],
     ["/", ASTType.Divide],
     ["^", ASTType.Exponent],
+    ["%", ASTType.Modulo],
     ["=", ASTType.Assign]
 ]);
 
@@ -102,8 +108,9 @@ export const stdlib: Map<string, string> = new Map([
     ["gety", "(%%0%%).y"],
     ["index", "(%%0%%)[(%%1%%)+1]"],
     ["index1", "(%%0%%)[%%1%%]"],
-
     ["if", "\\{%%0%%:%%1%%,%%2%%\\}"],
+    ["range", "[%%0%%,(%%0%%+%%2%%-1)...%%1%%]"],
+    ["rangeInclusive", "[%%0%%,(%%0%%+%%2%%)...%%1%%]"],
 
     ["pi", "\\pi"],
     ["tau", "\\tau"],
@@ -132,6 +139,12 @@ export const stdlib: Map<string, string> = new Map([
     ["arcsec", "\\operatorname{arcsec}(%%0%%)"],
     ["arccot", "\\operatorname{arccot}(%%0%%)"],
     ["atan2", "\\arctan(%%0%%,%%1%%)"],
+    ["sinh", "\\sinh(%%0%%)"],
+    ["cosh", "\\cosh(%%0%%)"],
+    ["tanh", "\\tanh(%%0%%)"],
+    ["csch", "\\operatorname{csch}(%%0%%)"],
+    ["sech", "\\operatorname{sech}(%%0%%)"],
+    ["coth", "\\operatorname{coth}(%%0%%)"],
 
     ["mean", "\\operatorname{mean}(%%0%%)"],
     ["median", "\\operatorname{median}(%%0%%)"],
@@ -171,5 +184,24 @@ export const stdlib: Map<string, string> = new Map([
     ["log10", "\\log(%%0%%)"],
     ["log", "\\log_{%%1%%}(%%0%%)"],
     ["derivative", "\\frac{d}{d%%1%%}(%%0%%)"],
-    ["integral", "\\int_{%%1%%}^{%%2%%}(%%0%%)d%%3%%"]
+    ["integral", "\\int_{%%1%%}^{%%2%%}(%%0%%)d%%3%%"],
+    ["sum", "\\sum_{%%1%%=%%2%%}^{%%3%%}(%%0%%)"],
+    ["prod", "\\prod_{%%1%%=%%2%%}^{%%3%%}(%%0%%)"],
+
+    ["polygon", "\\operatorname{polygon}(%%0%%)"],
+    ["distance", "\\operatorname{distance}(%%0%%,%%1%%)"],
+    ["midpoint", "\\operatorname{midpoint}(%%0%%,%%1%%)"],
+
+    ["rgb", "\\operatorname{rgb}(%%0%%,%%1%%,%%2%%)"],
+    ["hsv", "\\operatorname{hsv}(%%0%%,%%1%%,%%2%%)"],
+
+    ["lcm", "\\operatorname{lcm}(%%0%%)"],
+    ["gcd", "\\operatorname{gcd}(%%0%%)"],
+    ["ceil", "\\operatorname{ceil}(%%0%%)"],
+    ["floor", "\\operatorname{floor}(%%0%%)"],
+    ["round", "\\operatorname{round}(%%0%%)"],
+    ["sign", "\\operatorname{sign}(%%0%%)"],
+    ["nPr", "\\operatorname{nPr}(%%0%%,%%1%%)"],
+    ["nCr", "\\operatorname{nCr}(%%0%%,%%1%%)"],
+    ["abs", "\\left|%%0%%\\right|"]
 ]);
