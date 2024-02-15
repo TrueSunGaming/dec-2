@@ -98,10 +98,16 @@ export const keywordTypes: Map<string, KeywordType> = new Map([
 
 // %%n%% -> replaced by nth argument
 export const stdlib: Map<string, string> = new Map([
+    ["getx", "(%%0%%).x"],
+    ["gety", "(%%0%%).y"],
+    ["index", "(%%0%%)[(%%1%%)+1]"],
+    ["index1", "(%%0%%)[%%1%%]"],
+
     ["if", "\\{%%0%%:%%1%%,%%2%%\\}"],
 
     ["pi", "\\pi"],
     ["tau", "\\tau"],
+    ["infinity", "\\infty"],
 
     ["sqrt", "\\sqrt{%%0%%}"],
     ["cbrt", "\\sqrt[3]{%%0%%}"],
@@ -148,8 +154,22 @@ export const stdlib: Map<string, string> = new Map([
     ["sort", "\\operatorname{sort}(%%0%%)"],
     ["shuffle", "\\operatorname{shuffle}(%%0%%)"],
     ["unique", "\\operatorname{unique}(%%0%%)"],
-    // \left[\left(i\right)\operatorname{for}i=A\right]
     ["map", "[(%%2%%)\\operatorname{for}%%1%%=%%0%%]"],
+    ["unique", "\\operatorname{tdist}(%%0%%)"],
 
-    ["normaldist", "\\operatorname{normaldist}(%%0%%,%%1%%)"],
+    ["normalDist", "\\operatorname{normaldist}(%%0%%,%%1%%)"],
+    ["poissonDist", "\\operatorname{poissondist}(%%0%%)"],
+    ["binomialDist", "\\operatorname{binomialdist}(%%0%%,%%1%%)"],
+    ["uniformDist", "\\operatorname{uniformdist}(%%0%%,%%1%%)"],
+    ["random", "\\operatorname{random}()"],
+    ["pdf", "(%%0%%).\\operatorname{pdf}(%%1%%)"],
+    ["cdf", "(%%0%%).\\operatorname{cdf}(%%1%%)"],
+    ["inverseCDF", "(%%0%%).\\operatorname{inversecdf}(%%1%%)"],
+
+    ["exp", "\\exp(%%0%%)"],
+    ["ln", "\\ln(%%0%%)"],
+    ["log10", "\\log(%%0%%)"],
+    ["log", "\\log_{%%1%%}(%%0%%)"],
+    ["derivative", "\\frac{d}{d%%1%%}(%%0%%)"],
+    ["integral", "\\int_{%%1%%}^{%%2%%}(%%0%%)d%%3%%"]
 ]);

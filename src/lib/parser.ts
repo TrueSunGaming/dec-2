@@ -250,7 +250,7 @@ function parseSquare(tokens: Token[]): AST {
     const separators: number[] = [];
 
     let paramNesting = 0;
-    for (let i = 0; i < tokens.length; i++) {
+    for (let i = 1; i < tokens.length - 1; i++) {
         if (
             tokens[i].type == TokenType.ParenOpen ||
             tokens[i].type == TokenType.SquareOpen ||
