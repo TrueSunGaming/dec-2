@@ -1,11 +1,15 @@
 <script lang="ts">
     import * as monaco from "monaco-editor";
     import { onMount } from "svelte";
+    import "./monaco";
 
     let editorEl: HTMLDivElement;
 
     onMount(() => {
-        monaco.editor.create(editorEl);
+        monaco.editor.create(editorEl, {
+            theme: "dec2-theme",
+            language: "dec2"
+        });
     });
 </script>
 
@@ -14,8 +18,6 @@
 <style lang="scss">
     div {
         height: 100vh;
-        position: absolute;
-        left: 0;
-        top: 0;
+        width: 80vw;
     }
 </style>
