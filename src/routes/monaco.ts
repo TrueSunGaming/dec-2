@@ -1,4 +1,4 @@
-import { keywordTypes, operatorMap, stdlib } from "$lib/data";
+import { keywordTypes, operatorMap, stdlibName } from "$lib/data";
 import { escapeRegExp } from "$lib/formatRegEx";
 import * as monaco from "monaco-editor";
 
@@ -90,20 +90,13 @@ monaco.languages.registerCompletionItemProvider("dec2", {
                     range
                 })),
 
-                ...Array.from(stdlib.keys()).map((v) => {
-                    const compiled: string = stdlib.get(v)!;
-
-                    const count: number = (compiled.match(/%%\d%%/g) || []).length;
-                    const param: string[] = [];
-
-                    for (let i = 1; i <= count; i++) {
-                        param.push(`\${${i}:param}`)
-                    }
+                ...Array.from(stdlibName.entries()).map(([k, v]) => {
+                    const param: string[] = v.map((w, i) => `\${${i + 1}:${w}}`);
 
                     return {
-                        label: v,
+                        label: k,
                         kind: monaco.languages.CompletionItemKind.Function,
-                        insertText: v + `(${param.join(", ")})`,
+                        insertText: k + `(${param.join(", ")})`,
                         range,
                         insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
                     }
@@ -111,4 +104,4 @@ monaco.languages.registerCompletionItemProvider("dec2", {
             ]
         }
     }
-})
+});
