@@ -212,7 +212,7 @@ export const stdlibName: Map<string, string[]> = new Map([
     ["gety", ["point"]],
     ["index", ["list", "index"]],
     ["index1", ["list", "index"]],
-    ["if", ["condition", "then", "else"]],
+    ["ternary", ["condition", "then", "else"]],
     ["range", ["from", "to", "step"]],
     ["rangeInclusive", ["from", "to", "step"]],
     
