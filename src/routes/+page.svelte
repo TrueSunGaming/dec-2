@@ -1,13 +1,15 @@
 <script lang="ts">
-    import * as monaco from "monaco-editor";
     import { onMount } from "svelte";
-    import "./monaco";
+    import { initMonaco } from "./monaco";
     import { fullCompile } from "$lib/compiler";
+    import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api";
 
     let editorEl: HTMLDivElement;
 
-    onMount(() => {
-        const editor: monaco.editor.IStandaloneCodeEditor = monaco.editor.create(editorEl, {
+    onMount(async () => {
+        const monaco: typeof Monaco = await initMonaco();
+
+        const editor: Monaco.editor.IStandaloneCodeEditor = monaco.editor.create(editorEl, {
             theme: "vs-dark",
             language: "dec2"
         });
@@ -20,7 +22,7 @@
             ],
             contextMenuGroupId: "compile",
 
-            run: (ed: monaco.editor.IStandaloneCodeEditor) => {
+            run: (ed: Monaco.editor.IStandaloneCodeEditor) => {
                 const win: Window = window.open("about:blank", "_blank")!;
 
                 win.document.body.innerText = fullCompile(ed.getValue());
