@@ -1,23 +1,29 @@
 import { ASTType, type AST } from "./AST";
 import { stdlib } from "./data";
 import { desmosFormat } from "./desmosFormat";
-import { generateTokens } from "./lexer";
+import { generateTokens, type PositionedToken } from "./lexer";
 import { createSyntaxTree } from "./parser";
 
 const macros: Map<string, [string[], AST]> = new Map();
 
 function buildMacro(name: string, params: AST[]): AST {
+    console.log(name);
+
     const res: AST = structuredClone(macros.get(name)![1]);
     const paramMap: Map<string, AST> = new Map(params.map((v, i) => [
         macros.get(name)![0][i],
         v
     ]));
 
+    console.log(res);
+
     for (let i = 0; i < res.parts.length; i++) {
         if (res.parts[i].type != ASTType.Access || !paramMap.has(res.parts[i].value ?? "")) continue;
 
         res.parts[i] = paramMap.get(res.parts[i].value!)!;
     }
+
+    console.log("resulting macro", res);
 
     return res;
 }
@@ -34,6 +40,8 @@ export function compile(ast: AST, first = false): string {
 
         case ASTType.Call:
             if (!stdlib.has(ast.value ?? "") && !macros.has(ast.value ?? "")) return `${desmosFormat(ast.value ?? "")}(${ast.parts.map((v) => compile(v)).join(",")})`;
+
+            console.log(stdlib.has(ast.value ?? ""), macros.has(ast.value ?? ""));
 
             if (stdlib.has(ast.value ?? "")) return (() => {
                 let res: string = stdlib.get(ast.value!)!;
@@ -68,7 +76,7 @@ export function compile(ast: AST, first = false): string {
             return `\\operatorname{mod}(${compile(ast.parts[0])},${compile(ast.parts[1])})`;
 
         case ASTType.Assign:
-            return `${compile(ast.parts[0])}\\to${compile(ast.parts[1])}`;
+            return `${compile(ast.parts[0])}\\to(${compile(ast.parts[1])})`;
 
         case ASTType.AddAssign:
             return `${compile(ast.parts[0])}\\to(${compile(ast.parts[0])}+${compile(ast.parts[1])})`;            
@@ -127,6 +135,8 @@ export function compile(ast: AST, first = false): string {
                     }
                 ]);
 
+                console.log(macros.get(ast.value));
+
                 return "";
             })();
         
@@ -152,5 +162,9 @@ export function compileFormat(res: string): string {
 }
 
 export function fullCompile(code: string): string {
-    return compileFormat(compile(createSyntaxTree(generateTokens(code)), true));
+    const tokens: PositionedToken[] = generateTokens(code);
+    console.log("tokens", tokens);
+    const ast: AST = createSyntaxTree(tokens);
+    console.log("ast", ast);
+    return compileFormat(compile(ast, true));
 }
