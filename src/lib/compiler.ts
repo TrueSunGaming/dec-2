@@ -6,26 +6,33 @@ import { createSyntaxTree } from "./parser";
 
 const macros: Map<string, [string[], AST]> = new Map();
 
-function buildMacro(name: string, params: AST[]): AST {
-    console.log(name);
+const macroReplaceable: ASTType[] = [
+    ASTType.Access,
+    ASTType.Call,
+    ASTType.Define,
+    ASTType.Declare,
+    ASTType.ActionDefine
+];
 
-    const res: AST = structuredClone(macros.get(name)![1]);
-    const paramMap: Map<string, AST> = new Map(params.map((v, i) => [
-        macros.get(name)![0][i],
-        v
-    ]));
-
-    console.log(res);
+function buildMacroFromAST(ast: AST, paramMap: Map<string, AST>): AST {
+    const res: AST = structuredClone(ast);
 
     for (let i = 0; i < res.parts.length; i++) {
-        if (res.parts[i].type != ASTType.Access || !paramMap.has(res.parts[i].value ?? "")) continue;
+        if (macroReplaceable.includes(res.parts[i].type) && paramMap.has(res.parts[i].value ?? "")) {
+            res.parts[i].value = paramMap.get(res.parts[i].value ?? "")!.value;
+        }
 
-        res.parts[i] = paramMap.get(res.parts[i].value!)!;
+        res.parts[i] = buildMacroFromAST(res.parts[i], paramMap);
     }
 
-    console.log("resulting macro", res);
-
     return res;
+}
+
+function buildMacro(name: string, params: AST[]): AST {
+    return buildMacroFromAST(structuredClone(macros.get(name)![1]), new Map(params.map((v, i) => [
+        macros.get(name)![0][i],
+        v
+    ])));
 }
 
 export function compile(ast: AST, first = false): string {
@@ -33,15 +40,13 @@ export function compile(ast: AST, first = false): string {
 
     switch(ast.type) {
         case ASTType.Program:
-            return ast.parts.map((v) => compile(v)).join("\n");
+            return ast.parts.map((v) => compile(v)).filter((v) => v.length > 0).join("\n");
 
         case ASTType.Access:
             return desmosFormat(ast.value ?? "");
 
         case ASTType.Call:
             if (!stdlib.has(ast.value ?? "") && !macros.has(ast.value ?? "")) return `${desmosFormat(ast.value ?? "")}(${ast.parts.map((v) => compile(v)).join(",")})`;
-
-            console.log(stdlib.has(ast.value ?? ""), macros.has(ast.value ?? ""));
 
             if (stdlib.has(ast.value ?? "")) return (() => {
                 let res: string = stdlib.get(ast.value!)!;
@@ -117,7 +122,7 @@ export function compile(ast: AST, first = false): string {
         case ASTType.ActionDefine:
             return (() => {
                 const paramLength: number = ast.parts.findIndex((v) => v.type == ASTType.EndParameters);
-                return `${desmosFormat(ast.value ?? "")}(${ast.parts.slice(0, paramLength).map((v) => compile(v)).join(",")})=${ast.parts.slice(paramLength + 1).map((v) => compile(v)).join(",")}`;
+                return `${desmosFormat(ast.value ?? "")}(${ast.parts.slice(0, paramLength).map((v) => compile(v)).join(",")})=${compile(ast.parts.at(-1)!).replace("\n", ",")}`;
             })();
         
         case ASTType.MacroDefine:
@@ -134,8 +139,6 @@ export function compile(ast: AST, first = false): string {
                         parts: ast.parts.slice(paramLength + 1)
                     }
                 ]);
-
-                console.log(macros.get(ast.value));
 
                 return "";
             })();
