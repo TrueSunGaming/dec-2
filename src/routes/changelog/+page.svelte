@@ -17,6 +17,8 @@
     <li>Add <code>length</code> stdlib function</li>
     <li>Add square bracket syntax for indexing lists (e.g. <code>list[index]</code>), which is always 0-indexed</li>
     <li>Remove <code>index</code> and <code>index1</code> stdlib functions</li>
+    <li>Add <code>factorial</code> stdlib function</li>
+    <li>Add <code>if</code> statements</li>
 </ul>
 
 <hr>

@@ -157,6 +157,16 @@ export function compile(ast: AST, first = false): string {
         
         case ASTType.Index:
             return `${compile(ast.parts[0])}[${compile(ast.parts[1])}+1]`;
+        
+        case ASTType.Conditional:
+            switch(ast.parts.length) {
+                case 2:
+                    return `${compile(ast.parts[1])}\\{${compile(ast.parts[0])}\\}`;
+                case 3:
+                    return `\\{${compile(ast.parts[0])}:${compile(ast.parts[1])},${compile(ast.parts[2])}\\}`
+                default:
+                    return "";
+            }
 
         default:
             return "";
@@ -174,9 +184,14 @@ export function compileFormat(res: string): string {
 }
 
 export function fullCompile(code: string): string {
-    const tokens: PositionedToken[] = generateTokens(code);
-    console.log("tokens", tokens);
-    const ast: AST = createSyntaxTree(tokens);
-    console.log("ast", ast);
-    return compileFormat(compile(ast, true));
+    try {
+        const tokens: PositionedToken[] = generateTokens(code);
+        console.log("tokens", tokens);
+        const ast: AST = createSyntaxTree(tokens);
+        console.log("ast", ast);
+        return compileFormat(compile(ast, true));
+    } catch(e) {
+        console.error(e);
+        return "An error occurred during compilation:\n" + e;
+    }
 }

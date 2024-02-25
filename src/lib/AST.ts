@@ -30,7 +30,8 @@ export enum ASTType {
     ModuloAssign,
     LaTeX,
     LaTeXConcat,
-    Index
+    Index,
+    Conditional
 }
 
 export interface AST {

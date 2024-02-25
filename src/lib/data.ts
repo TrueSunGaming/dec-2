@@ -101,7 +101,10 @@ export const keywords: string[] = [
     "phi",
     "pi",
     "tau",
-    "infinity"
+    "infinity",
+    "if",
+    "else",
+    "elif"
 ];
 
 // %%n%% -> replaced by nth argument
@@ -201,7 +204,8 @@ export const stdlib: Map<string, string> = new Map([
     ["sign", "\\operatorname{sign}(%%0%%)"],
     ["nPr", "\\operatorname{nPr}(%%0%%,%%1%%)"],
     ["nCr", "\\operatorname{nCr}(%%0%%,%%1%%)"],
-    ["abs", "\\left|%%0%%\\right|"]
+    ["abs", "\\left|%%0%%\\right|"],
+    ["factorial", "(%%0%%)!"]
 ]);
 
 export const stdlibName: Map<string, string[]> = new Map([
@@ -284,4 +288,22 @@ export const stdlibName: Map<string, string[]> = new Map([
     ["integral", ["expr", "var", "from", "to"]],
     ["sum", ["expr", "var", "from", "to"]],
     ["prod", ["expr", "var", "from", "to"]],
+
+    ["polygon", ["pointsList"]],
+    ["distance", ["point1", "point2"]],
+    ["midpoint", ["point1", "point2"]],
+
+    ["rgb", ["red", "green", "blue"]],
+    ["hsv", ["hue", "saturation", "value"]],
+
+    ["lcm", ["list"]],
+    ["gcd", ["list"]],
+    ["ceil", ["value"]],
+    ["floor", ["value"]],
+    ["round", ["value"]],
+    ["sign", ["value"]],
+    ["nPr", ["itemCount", "permutationCount"]],
+    ["nCr", ["itemCount", "combinationCount"]],
+    ["abs", ["value"]],
+    ["factorial", ["value"]]
 ]);
