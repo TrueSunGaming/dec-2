@@ -31,6 +31,10 @@
     });
 </script>
 
+<svelte:head>
+    <title>Desmos Expression Compiler</title>
+</svelte:head>
+
 <div bind:this={ editorEl }></div>
 
 <style lang="scss">

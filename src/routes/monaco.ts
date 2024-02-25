@@ -1,4 +1,4 @@
-import { keywordTypes, operatorMap, stdlibName } from "$lib/data";
+import { keywords, operatorMap, stdlibName } from "$lib/data";
 import { escapeRegExp } from "$lib/formatRegEx";
 import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api";
 
@@ -7,10 +7,11 @@ export async function initMonaco(): Promise<typeof Monaco> {
 
     const monacoTokenMap: Map<RegExp, string> = new Map([
         [/\(|\)|\{|\}|\[|\]/g, "@brackets"],
-        [new RegExp(Array.from(keywordTypes.keys()).map(escapeRegExp).join("|"), "g"), "keyword"],
+        [new RegExp(keywords.map(escapeRegExp).join("|"), "g"), "keyword"],
         [new RegExp(Array.from(operatorMap.keys()).map(escapeRegExp).join("|"), "g"), "operator"],
         [/[a-zA-Z]+([a-zA-Z\d]+)?/g, "identifier"],
         [/[\d.]+/g, "number"],
+        [/"(.*?)"/g, "string"]
     ]);
     
     monaco.languages.register({ id: "dec2" });
@@ -18,21 +19,6 @@ export async function initMonaco(): Promise<typeof Monaco> {
     monaco.languages.setMonarchTokensProvider("dec2", {
         tokenizer: {
             root: Array.from(monacoTokenMap.entries())
-        }
-    });
-    
-    monaco.editor.defineTheme("dec2-theme", {
-        base: "vs-dark",
-        inherit: false,
-        rules: [
-            { token: "bracket" },
-            { token: "keyword", foreground: "#dc52ff" },
-            { token: "operator", foreground: "#00d0d0" },
-            { token: "identifier", foreground: "#ff5050" },
-            { token: "number", foreground: "#80ff80" },
-        ],
-        colors: {
-            "editor.foreground": "#ffffff"
         }
     });
     
@@ -86,7 +72,7 @@ export async function initMonaco(): Promise<typeof Monaco> {
     
             return {
                 suggestions: [
-                    ...Array.from(keywordTypes.keys()).map((v) => ({
+                    ...keywords.map((v) => ({
                         label: v,
                         kind: monaco.languages.CompletionItemKind.Keyword,
                         insertText: v,

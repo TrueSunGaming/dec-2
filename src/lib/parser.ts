@@ -65,11 +65,13 @@ function parseSplit(tokens: Token[]): AST {
         case TokenType.ParenOpen:
             return parseParentheses(tokens);
         case TokenType.Identifier:
-            return parseIndentifierStart(tokens);
+            return parseIdentifierStart(tokens);
         case TokenType.SquareOpen:
             return parseSquare(tokens);
         case TokenType.Keyword:
             return parseKeyword(tokens);
+        case TokenType.LaTeX:
+            return parseLaTeX(tokens);
         default:
             return res;
     }
@@ -88,12 +90,12 @@ function parseNumberStart(tokens: Token[]): AST {
         return res;
     }
 
-    if (tokens.length >= 3) return parseNumberExpression(tokens);
+    if (tokens.length > 1) return parseNumberExpression(tokens);
 
     return res;
 }
 
-function parseIndentifierStart(tokens: Token[]): AST {
+function parseIdentifierStart(tokens: Token[]): AST {
     const res: AST = {
         type: ASTType.Program,
         parts: [],
@@ -177,7 +179,28 @@ function parseNumberExpression(tokens: Token[]): AST {
         if (operatorMap.has(tokens[i].value)) operations.push([tokens[i].value, i, parenthesesLayer]);
     }
 
-    if (operations.length < 1) throw new Error(`No operation found in expression.`);
+    console.log(operations);
+
+    if (operations.length < 1) {
+        const latex: number[] = tokens.flatMap((v, i) => v.type == TokenType.LaTeX ? [i] : []);
+
+        if (latex.length < 1) throw new Error(`No operation found in expression.`);
+
+        const res: AST = {
+            type: ASTType.LaTeXConcat,
+            value: null,
+            parts: []
+        };
+
+        for (let i = 0; i < latex.length; i++) {
+            res.parts.push(
+                createSyntaxTree(tokens.slice(i == 0 ? 0 : latex[i - 1] + 1, latex[i])),
+                parseLaTeX([tokens[latex[i]]])
+            );
+        }
+
+        return res;
+    }
 
     operations.sort((a, b) => {
         if (a[2] != b[2]) return b[2] - a[2];
@@ -293,6 +316,20 @@ function parseKeyword(tokens: Token[]): AST {
             return parseAction(tokens);
         case "macro":
             return parseMacro(tokens);
+        case "alpha":
+            return parseReplacement(tokens, "\\alpha");
+        case "beta":
+            return parseReplacement(tokens, "\\beta");
+        case "theta":
+            return parseReplacement(tokens, "\\theta");
+        case "phi":
+            return parseReplacement(tokens, "\\phi");
+        case "infinity":
+            return parseReplacement(tokens, "\\infinity");
+        case "pi":
+            return parseReplacement(tokens, "\\pi");
+        case "tau":
+            return parseReplacement(tokens, "\\tau");
         default:
             throw new Error(`Unknown keyword ${tokens[0].value}`);
     }
@@ -301,7 +338,7 @@ function parseKeyword(tokens: Token[]): AST {
 function parseLet(tokens: Token[]): AST {
     return {
         type: ASTType.Declare,
-        value: tokens[1].value,
+        value: createSyntaxTree([tokens[1]]).value,
         parts: [createSyntaxTree(tokens.slice(3))]
     }
 }
@@ -380,4 +417,25 @@ function parseMacro(tokens: Token[]): AST {
     res.parts.push(body);
 
     return res;
+}
+
+function parseReplacement(tokens: Token[], replacement: string): AST {
+    const newTokenList: Token[] = [...tokens];
+
+    newTokenList[0] = {
+        type: TokenType.LaTeX,
+        value: replacement
+    };
+
+    return createSyntaxTree(newTokenList);
+}
+
+function parseLaTeX(tokens: Token[]): AST {
+    if (tokens.length > 1) return parseNumberExpression(tokens);
+
+    return {
+        type: ASTType.LaTeX,
+        value: tokens[0].value,
+        parts: []
+    };
 }

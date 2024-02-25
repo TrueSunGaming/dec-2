@@ -148,6 +148,12 @@ export function compile(ast: AST, first = false): string {
         
         case ASTType.Point:
             return `(${compile(ast.parts[0])},${compile(ast.parts[1])})`;
+            
+        case ASTType.LaTeX:
+            return ast.value ?? "";
+        
+        case ASTType.LaTeXConcat:
+            return ast.parts.map((v) => compile(v)).join("");
 
         default:
             return "";

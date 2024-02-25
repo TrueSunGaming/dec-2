@@ -27,7 +27,9 @@ export enum ASTType {
     List,
     Point,
     Modulo,
-    ModuloAssign
+    ModuloAssign,
+    LaTeX,
+    LaTeXConcat
 }
 
 export interface AST {

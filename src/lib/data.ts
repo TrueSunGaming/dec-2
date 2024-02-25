@@ -90,17 +90,19 @@ export const orderOfOperations: Map<Operator, OperationType> = new Map([
     [Operator.Exponent,       OperationType.Exponent]
 ]);
 
-export enum KeywordType {
-    Normal,
-    Block
-}
-
-export const keywordTypes: Map<string, KeywordType> = new Map([
-    ["let", KeywordType.Normal],
-    ["function", KeywordType.Block],
-    ["action", KeywordType.Block],
-    ["macro", KeywordType.Block],
-]);
+export const keywords: string[] = [
+    "let",
+    "function",
+    "action",
+    "macro",
+    "alpha",
+    "beta",
+    "theta",
+    "phi",
+    "pi",
+    "tau",
+    "infinity"
+];
 
 // %%n%% -> replaced by nth argument
 export const stdlib: Map<string, string> = new Map([
@@ -111,10 +113,6 @@ export const stdlib: Map<string, string> = new Map([
     ["ternary", "\\{%%0%%:%%1%%,%%2%%\\}"],
     ["range", "[%%0%%,(%%0%%+%%2%%-1)...%%1%%]"],
     ["rangeInclusive", "[%%0%%,(%%0%%+%%2%%)...%%1%%]"],
-
-    ["pi", "\\pi"],
-    ["tau", "\\tau"],
-    ["infinity", "\\infty"],
 
     ["sqrt", "\\sqrt{%%0%%}"],
     ["cbrt", "\\sqrt[3]{%%0%%}"],
@@ -215,10 +213,6 @@ export const stdlibName: Map<string, string[]> = new Map([
     ["ternary", ["condition", "then", "else"]],
     ["range", ["from", "to", "step"]],
     ["rangeInclusive", ["from", "to", "step"]],
-    
-    ["pi", []],
-    ["tau", []],
-    ["infinity", []],
 
     ["sqrt", ["value"]],
     ["cbrt", ["value"]],
