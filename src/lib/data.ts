@@ -108,8 +108,6 @@ export const keywords: string[] = [
 export const stdlib: Map<string, string> = new Map([
     ["getx", "(%%0%%).x"],
     ["gety", "(%%0%%).y"],
-    ["index", "(%%0%%)[(%%1%%)+1]"],
-    ["index1", "(%%0%%)[%%1%%]"],
     ["ternary", "\\{%%0%%:%%1%%,%%2%%\\}"],
     ["range", "[%%0%%,(%%0%%+%%2%%-1)...%%1%%]"],
     ["rangeInclusive", "[%%0%%,(%%0%%+%%2%%)...%%1%%]"],
@@ -160,6 +158,7 @@ export const stdlib: Map<string, string> = new Map([
     ["spearman", "\\operatorname{spearman}(%%0%%,%%1%%)"],
     ["count", "\\operatorname{count}(%%0%%)"],
     ["total", "\\operatorname{total}(%%0%%)"],
+    ["length", "\\operatorname{length}(%%0%%)"],
 
     ["join", "\\operatorname{join}(%%0%%,%%1%%)"],
     ["sort", "\\operatorname{sort}(%%0%%)"],
@@ -208,8 +207,6 @@ export const stdlib: Map<string, string> = new Map([
 export const stdlibName: Map<string, string[]> = new Map([
     ["getx", ["point"]],
     ["gety", ["point"]],
-    ["index", ["list", "index"]],
-    ["index1", ["list", "index"]],
     ["ternary", ["condition", "then", "else"]],
     ["range", ["from", "to", "step"]],
     ["rangeInclusive", ["from", "to", "step"]],
@@ -260,6 +257,7 @@ export const stdlibName: Map<string, string[]> = new Map([
     ["spearman", ["list1", "list2"]],
     ["count", ["list"]],
     ["total", ["list"]],
+    ["length", ["list"]],
 
     ["join", ["list1", "list2"]],
     ["sort", ["list"]],

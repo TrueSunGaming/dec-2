@@ -108,8 +108,6 @@ function parseIdentifierStart(tokens: Token[]): AST {
         return res;
     }
 
-    let extraTokens = 0;
-
     if (tokens[1].type == TokenType.ParenOpen) {
         let nesting = 0;
         let close = -1;
@@ -119,7 +117,6 @@ function parseIdentifierStart(tokens: Token[]): AST {
                 nesting--;
                 if (nesting == 0) {
                     close = i;
-                    extraTokens = i;
                     break;
                 }
             }
@@ -154,9 +151,15 @@ function parseIdentifierStart(tokens: Token[]): AST {
         res.type = ASTType.Call;
         res.value = tokens[0].value;
         res.parts = filtered.map(createSyntaxTree);
+
+        return {
+            type: ASTType.Call,
+            value: tokens[0].value,
+            parts: filtered.map(createSyntaxTree)
+        };
     }
 
-    if (tokens.length >= 3 + extraTokens) return parseNumberExpression(tokens);
+    if (tokens.length > 1) return parseNumberExpression(tokens);
 
     return res;
 }
@@ -171,20 +174,28 @@ function parseNumberExpression(tokens: Token[]): AST {
     const operations: [string, number, number][] = [];
 
     let parenthesesLayer = 0;
+    let bracketLayer = 0;
 
     for (let i = 0; i < tokens.length; i++) {
         if (tokens[i].type == TokenType.ParenOpen) parenthesesLayer++;
         if (tokens[i].type == TokenType.ParenClose) parenthesesLayer--;
+        
+        if (tokens[i].type == TokenType.SquareOpen) bracketLayer++;
+        if (tokens[i].type == TokenType.SquareClose) bracketLayer--;
 
-        if (operatorMap.has(tokens[i].value)) operations.push([tokens[i].value, i, parenthesesLayer]);
+        if (bracketLayer == 0 && operatorMap.has(tokens[i].value)) operations.push([tokens[i].value, i, parenthesesLayer]);
     }
-
-    console.log(operations);
 
     if (operations.length < 1) {
         const latex: number[] = tokens.flatMap((v, i) => v.type == TokenType.LaTeX ? [i] : []);
 
-        if (latex.length < 1) throw new Error(`No operation found in expression.`);
+        if (latex.length < 1) {
+            const square: number = tokens.findIndex((v) => v.type == TokenType.SquareOpen);
+
+            if (square == -1) throw new Error(`No index, operation, or LaTeX string found in expression.`);
+
+            return parseIndexing(tokens);
+        }
 
         const res: AST = {
             type: ASTType.LaTeXConcat,
@@ -437,5 +448,20 @@ function parseLaTeX(tokens: Token[]): AST {
         type: ASTType.LaTeX,
         value: tokens[0].value,
         parts: []
+    };
+}
+
+function parseIndexing(tokens: Token[]): AST {
+    const openBracket: number = tokens.findIndex((v, i) => i != 0 && v.type == TokenType.SquareOpen);
+
+    console.log(tokens);
+
+    return {
+        type: ASTType.Index,
+        value: null,
+        parts: [
+            createSyntaxTree(tokens.slice(0, openBracket)),
+            createSyntaxTree(tokens.slice(openBracket + 1, -1))
+        ]
     };
 }

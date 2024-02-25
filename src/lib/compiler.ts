@@ -154,6 +154,9 @@ export function compile(ast: AST, first = false): string {
         
         case ASTType.LaTeXConcat:
             return ast.parts.map((v) => compile(v)).join("");
+        
+        case ASTType.Index:
+            return `${compile(ast.parts[0])}[${compile(ast.parts[1])}+1]`;
 
         default:
             return "";
