@@ -1,5 +1,5 @@
 import { ASTType, type AST } from "./AST";
-import { orderOfOperations, type OperationType, operatorMap, operatorAST } from "./data";
+import { orderOfOperations, OperationType, operatorMap, operatorAST, Operator } from "./data";
 import { TokenType, type Token } from "./lexer";
 
 function splitTokens(tokens: Token[]): Token[][] {
@@ -223,6 +223,21 @@ function parseNumberExpression(tokens: Token[]): AST {
     });
 
     const lastOperation: [string, number, number] = operations.at(-1)!;
+
+    if (operatorMap.get(lastOperation[0]) == Operator.TernaryElse) {
+        const qmark: number = tokens.findIndex((v) => v.value == "?");
+        if (qmark == -1) throw new Error("Expected starting ternary operator.");
+
+        return {
+            type: ASTType.Conditional,
+            value: null,
+            parts: [
+                createSyntaxTree(tokens.slice(0, qmark)),
+                createSyntaxTree(tokens.slice(qmark + 1, lastOperation[1])),
+                createSyntaxTree(tokens.slice(lastOperation[1] + 1)),
+            ]
+        }
+    }
 
     res.type = operatorAST.get(lastOperation[0])!;
     res.parts = [

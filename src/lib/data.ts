@@ -68,14 +68,13 @@ export const operatorAST: Map<string, ASTType> = new Map([
 ]);
 
 export enum OperationType {
-    Assignment = 0,
-    Comparison = 1,
-    AddSubtract = 2,
-    MultiplyDivide = 3,
-    Exponent = 4,
-    Modulo = 5,
-    TernaryIf = 6,
-    TernaryElse = 7,
+    Assignment,
+    Ternary,
+    Comparison,
+    AddSubtract,
+    MultiplyDivide,
+    Exponent,
+    Modulo,
 }
 
 export const orderOfOperations: Map<Operator, OperationType> = new Map([
@@ -97,8 +96,8 @@ export const orderOfOperations: Map<Operator, OperationType> = new Map([
     [Operator.Divide,         OperationType.MultiplyDivide],
     [Operator.Exponent,       OperationType.Exponent],
     [Operator.Modulo,         OperationType.Modulo],
-    [Operator.TernaryIf,      OperationType.TernaryIf],
-    [Operator.TernaryElse,    OperationType.TernaryElse]
+    [Operator.TernaryIf,      OperationType.Ternary],
+    [Operator.TernaryElse,    OperationType.Ternary]
 ]);
 
 export const keywords: string[] = [
@@ -122,7 +121,6 @@ export const keywords: string[] = [
 export const stdlib: Map<string, string> = new Map([
     ["getx", "(%%0%%).x"],
     ["gety", "(%%0%%).y"],
-    ["ternary", "\\{%%0%%:%%1%%,%%2%%\\}"],
     ["range", "[%%0%%,(%%0%%+%%2%%-1)...%%1%%]"],
     ["rangeInclusive", "[%%0%%,(%%0%%+%%2%%)...%%1%%]"],
 
@@ -222,7 +220,6 @@ export const stdlib: Map<string, string> = new Map([
 export const stdlibName: Map<string, string[]> = new Map([
     ["getx", ["point"]],
     ["gety", ["point"]],
-    ["ternary", ["condition", "then", "else"]],
     ["range", ["from", "to", "step"]],
     ["rangeInclusive", ["from", "to", "step"]],
 

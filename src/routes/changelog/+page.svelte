@@ -19,6 +19,8 @@
     <li>Remove <code>index</code> and <code>index1</code> stdlib functions</li>
     <li>Add <code>factorial</code> stdlib function</li>
     <li>Add <code>if</code> statements</li>
+    <li>Add ternary operator (<code>x {">"} 1 ? 2 : 3</code>)</li>
+    <li>Remove <code>ternary</code> stdlib function</li>
 </ul>
 
 <hr>
