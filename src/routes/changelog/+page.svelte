@@ -18,7 +18,7 @@
     <li>Add square bracket syntax for indexing lists (e.g. <code>list[index]</code>), which is always 0-indexed</li>
     <li>Remove <code>index</code> and <code>index1</code> stdlib functions</li>
     <li>Add <code>factorial</code> stdlib function</li>
-    <li>Add <code>if</code> statements</li>
+    <li>Add <code>if</code>/<code>elif</code>/<code>else</code> statements</li>
     <li>Add ternary operator (<code>x {">"} 1 ? 2 : 3</code>)</li>
     <li>Remove <code>ternary</code> stdlib function</li>
 </ul>

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { initMonaco } from "./monaco";
-    import { fullCompile } from "$lib/compiler";
+    import { fullCompile } from "$lib/compiler/compiler";
     import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api";
 
     let editorEl: HTMLDivElement;

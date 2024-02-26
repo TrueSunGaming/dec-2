@@ -1,39 +1,11 @@
-import { ASTType, type AST } from "./AST";
-import { stdlib } from "./data";
+import { ASTType, type AST } from "../parser/AST";
+import { stdlib } from "../data";
 import { desmosFormat } from "./desmosFormat";
-import { generateTokens, type PositionedToken } from "./lexer";
-import { createSyntaxTree } from "./parser";
+import { generateTokens, type PositionedToken } from "../lexer";
+import { createSyntaxTree } from "../parser/parser";
+import { buildMacro } from "./buildMacro";
 
-const macros: Map<string, [string[], AST]> = new Map();
-
-const macroReplaceable: ASTType[] = [
-    ASTType.Access,
-    ASTType.Call,
-    ASTType.Define,
-    ASTType.Declare,
-    ASTType.ActionDefine
-];
-
-function buildMacroFromAST(ast: AST, paramMap: Map<string, AST>): AST {
-    const res: AST = structuredClone(ast);
-
-    for (let i = 0; i < res.parts.length; i++) {
-        if (macroReplaceable.includes(res.parts[i].type) && paramMap.has(res.parts[i].value ?? "")) {
-            res.parts[i].value = paramMap.get(res.parts[i].value ?? "")!.value;
-        }
-
-        res.parts[i] = buildMacroFromAST(res.parts[i], paramMap);
-    }
-
-    return res;
-}
-
-function buildMacro(name: string, params: AST[]): AST {
-    return buildMacroFromAST(structuredClone(macros.get(name)![1]), new Map(params.map((v, i) => [
-        macros.get(name)![0][i],
-        v
-    ])));
-}
+export const macros: Map<string, [string[], AST]> = new Map();
 
 export function compile(ast: AST, first = false): string {
     if (first) macros.clear();

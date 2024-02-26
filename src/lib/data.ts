@@ -1,4 +1,4 @@
-import { ASTType } from "./AST";
+import { ASTType } from "./parser/AST";
 
 export enum Operator {
     Add,
@@ -315,3 +315,11 @@ export const stdlibName: Map<string, string[]> = new Map([
     ["abs", ["value"]],
     ["factorial", ["value"]]
 ]);
+
+export const macroReplaceable: ASTType[] = [
+    ASTType.Access,
+    ASTType.Call,
+    ASTType.Define,
+    ASTType.Declare,
+    ASTType.ActionDefine
+];
