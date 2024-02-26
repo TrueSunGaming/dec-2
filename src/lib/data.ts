@@ -18,7 +18,9 @@ export enum Operator {
     Less,
     LessOrEqual,
     Modulo,
-    ModuloAssign
+    ModuloAssign,
+    TernaryIf,
+    TernaryElse
 }
 
 export const operatorMap: Map<string, Operator> = new Map([
@@ -39,7 +41,9 @@ export const operatorMap: Map<string, Operator> = new Map([
     ["/", Operator.Divide],
     ["^", Operator.Exponent],
     ["%", Operator.Modulo],
-    ["=", Operator.Assign]
+    ["=", Operator.Assign],
+    ["?", Operator.TernaryIf],
+    [":", Operator.TernaryElse]
 ]);
 
 export const operatorAST: Map<string, ASTType> = new Map([
@@ -68,7 +72,10 @@ export enum OperationType {
     Comparison = 1,
     AddSubtract = 2,
     MultiplyDivide = 3,
-    Exponent = 4
+    Exponent = 4,
+    Modulo = 5,
+    TernaryIf = 6,
+    TernaryElse = 7,
 }
 
 export const orderOfOperations: Map<Operator, OperationType> = new Map([
@@ -78,6 +85,7 @@ export const orderOfOperations: Map<Operator, OperationType> = new Map([
     [Operator.MultiplyAssign, OperationType.Assignment],
     [Operator.DivideAssign,   OperationType.Assignment],
     [Operator.ExponentAssign, OperationType.Assignment],
+    [Operator.ModuloAssign,   OperationType.Assignment],
     [Operator.Equal,          OperationType.Comparison],
     [Operator.GreaterOrEqual, OperationType.Comparison],
     [Operator.Greater,        OperationType.Comparison],
@@ -87,7 +95,10 @@ export const orderOfOperations: Map<Operator, OperationType> = new Map([
     [Operator.Subtract,       OperationType.AddSubtract],
     [Operator.Multiply,       OperationType.MultiplyDivide],
     [Operator.Divide,         OperationType.MultiplyDivide],
-    [Operator.Exponent,       OperationType.Exponent]
+    [Operator.Exponent,       OperationType.Exponent],
+    [Operator.Modulo,         OperationType.Modulo],
+    [Operator.TernaryIf,      OperationType.TernaryIf],
+    [Operator.TernaryElse,    OperationType.TernaryElse]
 ]);
 
 export const keywords: string[] = [
