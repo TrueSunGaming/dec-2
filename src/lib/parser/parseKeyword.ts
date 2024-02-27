@@ -25,7 +25,7 @@ export function parseKeyword(tokens: Token[]): AST {
             return parseReplacement(tokens, "\\theta");
         case "phi":
             return parseReplacement(tokens, "\\phi");
-        case "infinity":
+        case "inf":
             return parseReplacement(tokens, "\\infinity");
         case "pi":
             return parseReplacement(tokens, "\\pi");

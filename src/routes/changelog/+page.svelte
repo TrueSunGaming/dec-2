@@ -13,6 +13,7 @@
         <code>\left</code> and <code>\right</code> annotations are added automatically
     </li>
     <li>Change Greek letters and <code>infinity</code> from stdlib functions to keywords</li>
+    <li>Rename <code>infinity</code> to <code>inf</code></li>
     <li>Add changelog</li>
     <li>Add <code>length</code> stdlib function</li>
     <li>Add square bracket syntax for indexing lists (e.g. <code>list[index]</code>), which is always 0-indexed</li>
@@ -21,8 +22,8 @@
     <li>Add <code>if</code>/<code>elif</code>/<code>else</code> statements</li>
     <li>Add ternary operator (<code>x {">"} 1 ? 2 : 3</code>)</li>
     <li>Remove <code>ternary</code> stdlib function</li>
-    <li>Add <code>neg</code> stdlib function</li>
-    <li>LaTeX outputs are now simpler and have less unnecessary parentheses</li>
+    <li>Add <code>neg</code> (negate) stdlib function</li>
+    <li>Make LaTeX outputs simpler and have less unnecessary parentheses</li>
 </ul>
 
 <hr>

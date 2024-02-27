@@ -1,5 +1,6 @@
 import { ASTType, type AST } from "./AST";
 import { simplifyAST } from "./simplifyAST";
+import { simplifyRecurse } from "./simplifyRecurse";
 
 export function simplifyAddSub(ast: AST): AST {
     if (simplifyAST(ast.parts[0]).value == "0") {
@@ -14,7 +15,5 @@ export function simplifyAddSub(ast: AST): AST {
 
     if (simplifyAST(ast.parts[1]).value == "0") return simplifyAST(ast.parts[0]);
     
-    const clone: AST = structuredClone(ast);
-    clone.parts = clone.parts.map(simplifyAST);
-    return clone;
+    return simplifyRecurse(ast);
 }

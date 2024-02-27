@@ -1,5 +1,6 @@
 import { ASTType, type AST } from "./AST";
 import { simplifyAddSub } from "./simplifyAddSub";
+import { simplifyExponent } from "./simplifyExponent";
 import { simplifyMulDiv } from "./simplifyMulDiv";
 import { simplifyRecurse } from "./simplifyRecurse";
 
@@ -18,6 +19,9 @@ export function simplifyAST(ast: AST): AST {
         
         case ASTType.Divide:
             return simplifyMulDiv(ast);
+        
+        case ASTType.Exponent:
+            return simplifyExponent(ast);
         
         default:
             return simplifyRecurse(ast);
