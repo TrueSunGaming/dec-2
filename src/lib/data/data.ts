@@ -11,11 +11,11 @@ export const keywords: string[] = [
     "phi",
     "pi",
     "tau",
-    "e",
     "infinity",
     "if",
     "else",
-    "elif"
+    "elif",
+    "e"
 ];
 
 export const macroReplaceable: ASTType[] = [
