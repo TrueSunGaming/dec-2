@@ -14,6 +14,7 @@
     </li>
     <li>Change Greek letters and <code>infinity</code> from stdlib functions to keywords</li>
     <li>Rename <code>infinity</code> to <code>inf</code></li>
+    <li>Add <code>e</code> keyword</li>
     <li>Add changelog</li>
     <li>Add <code>length</code> stdlib function</li>
     <li>Add square bracket syntax for indexing lists (e.g. <code>list[index]</code>), which is always 0-indexed</li>
