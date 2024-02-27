@@ -1,16 +1,18 @@
-import { keywordTypes, operatorMap, stdlibName } from "$lib/data";
-import { escapeRegExp } from "$lib/formatRegEx";
+import { keywords } from "$lib/data/data";
+import { stdlibName } from "$lib/data/stdlib";
 import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api";
+import { TokenType, tokenMap } from "$lib/lexer";
 
 export async function initMonaco(): Promise<typeof Monaco> {
     const monaco: typeof Monaco = (await import("$lib/monacoLoad")).default;
 
     const monacoTokenMap: Map<RegExp, string> = new Map([
         [/\(|\)|\{|\}|\[|\]/g, "@brackets"],
-        [new RegExp(Array.from(keywordTypes.keys()).map(escapeRegExp).join("|"), "g"), "keyword"],
-        [new RegExp(Array.from(operatorMap.keys()).map(escapeRegExp).join("|"), "g"), "operator"],
-        [/[a-zA-Z]+([a-zA-Z\d]+)?/g, "identifier"],
-        [/[\d.]+/g, "number"],
+        [Array.from(tokenMap.entries()).find((v) => v[1] == TokenType.Keyword)![0], "keyword"],
+        [Array.from(tokenMap.entries()).find((v) => v[1] == TokenType.Operator)![0], "operator"],
+        [Array.from(tokenMap.entries()).find((v) => v[1] == TokenType.Identifier)![0], "identifier"],
+        [Array.from(tokenMap.entries()).find((v) => v[1] == TokenType.Number)![0], "number"],
+        [/"(.*?)"/g, "string"]
     ]);
     
     monaco.languages.register({ id: "dec2" });
@@ -18,21 +20,6 @@ export async function initMonaco(): Promise<typeof Monaco> {
     monaco.languages.setMonarchTokensProvider("dec2", {
         tokenizer: {
             root: Array.from(monacoTokenMap.entries())
-        }
-    });
-    
-    monaco.editor.defineTheme("dec2-theme", {
-        base: "vs-dark",
-        inherit: false,
-        rules: [
-            { token: "bracket" },
-            { token: "keyword", foreground: "#dc52ff" },
-            { token: "operator", foreground: "#00d0d0" },
-            { token: "identifier", foreground: "#ff5050" },
-            { token: "number", foreground: "#80ff80" },
-        ],
-        colors: {
-            "editor.foreground": "#ffffff"
         }
     });
     
@@ -86,7 +73,7 @@ export async function initMonaco(): Promise<typeof Monaco> {
     
             return {
                 suggestions: [
-                    ...Array.from(keywordTypes.keys()).map((v) => ({
+                    ...keywords.map((v) => ({
                         label: v,
                         kind: monaco.languages.CompletionItemKind.Keyword,
                         insertText: v,

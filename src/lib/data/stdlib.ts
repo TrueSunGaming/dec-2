@@ -1,120 +1,9 @@
-import { ASTType } from "./AST";
-
-export enum Operator {
-    Add,
-    Subtract,
-    Multiply,
-    Divide,
-    Exponent,
-    Assign,
-    AddAssign,
-    SubtractAssign,
-    MultiplyAssign,
-    DivideAssign,
-    ExponentAssign,
-    Equal,
-    Greater,
-    GreaterOrEqual,
-    Less,
-    LessOrEqual,
-    Modulo,
-    ModuloAssign
-}
-
-export const operatorMap: Map<string, Operator> = new Map([
-    ["+=", Operator.AddAssign],
-    ["-=", Operator.SubtractAssign],
-    ["*=", Operator.MultiplyAssign],
-    ["/=", Operator.DivideAssign],
-    ["^=", Operator.ExponentAssign],
-    ["%=", Operator.ModuloAssign],
-    ["==", Operator.Equal],
-    [">=", Operator.GreaterOrEqual],
-    [">", Operator.Greater],
-    ["<=", Operator.LessOrEqual],
-    ["<", Operator.Less],
-    ["+", Operator.Add],
-    ["-", Operator.Subtract],
-    ["*", Operator.Multiply],
-    ["/", Operator.Divide],
-    ["^", Operator.Exponent],
-    ["%", Operator.Modulo],
-    ["=", Operator.Assign]
-]);
-
-export const operatorAST: Map<string, ASTType> = new Map([
-    ["+=", ASTType.AddAssign],
-    ["-=", ASTType.SubtractAssign],
-    ["*=", ASTType.MultiplyAssign],
-    ["/=", ASTType.DivideAssign],
-    ["^=", ASTType.ExponentAssign],
-    ["%=", ASTType.ModuloAssign],
-    ["==", ASTType.Equal],
-    [">=", ASTType.GreaterOrEqual],
-    [">", ASTType.Greater],
-    ["<=", ASTType.LessOrEqual],
-    ["<", ASTType.Less],
-    ["+", ASTType.Add],
-    ["-", ASTType.Subtract],
-    ["*", ASTType.Multiply],
-    ["/", ASTType.Divide],
-    ["^", ASTType.Exponent],
-    ["%", ASTType.Modulo],
-    ["=", ASTType.Assign]
-]);
-
-export enum OperationType {
-    Assignment = 0,
-    Comparison = 1,
-    AddSubtract = 2,
-    MultiplyDivide = 3,
-    Exponent = 4
-}
-
-export const orderOfOperations: Map<Operator, OperationType> = new Map([
-    [Operator.Assign,         OperationType.Assignment],
-    [Operator.AddAssign,      OperationType.Assignment],
-    [Operator.SubtractAssign, OperationType.Assignment],
-    [Operator.MultiplyAssign, OperationType.Assignment],
-    [Operator.DivideAssign,   OperationType.Assignment],
-    [Operator.ExponentAssign, OperationType.Assignment],
-    [Operator.Equal,          OperationType.Comparison],
-    [Operator.GreaterOrEqual, OperationType.Comparison],
-    [Operator.Greater,        OperationType.Comparison],
-    [Operator.LessOrEqual,    OperationType.Comparison],
-    [Operator.Less,           OperationType.Comparison],
-    [Operator.Add,            OperationType.AddSubtract],
-    [Operator.Subtract,       OperationType.AddSubtract],
-    [Operator.Multiply,       OperationType.MultiplyDivide],
-    [Operator.Divide,         OperationType.MultiplyDivide],
-    [Operator.Exponent,       OperationType.Exponent]
-]);
-
-export enum KeywordType {
-    Normal,
-    Block
-}
-
-export const keywordTypes: Map<string, KeywordType> = new Map([
-    ["let", KeywordType.Normal],
-    ["function", KeywordType.Block],
-    ["action", KeywordType.Block],
-    ["macro", KeywordType.Block],
-]);
-
 // %%n%% -> replaced by nth argument
 export const stdlib: Map<string, string> = new Map([
     ["getx", "(%%0%%).x"],
     ["gety", "(%%0%%).y"],
-    ["index", "(%%0%%)[(%%1%%)+1]"],
-    ["index1", "(%%0%%)[%%1%%]"],
-    ["ternary", "\\{%%0%%:%%1%%,%%2%%\\}"],
     ["range", "[%%0%%,(%%0%%+%%2%%-1)...%%1%%]"],
     ["rangeInclusive", "[%%0%%,(%%0%%+%%2%%)...%%1%%]"],
-
-    ["pi", "\\pi"],
-    ["tau", "\\tau"],
-    ["infinity", "\\infty"],
 
     ["sqrt", "\\sqrt{%%0%%}"],
     ["cbrt", "\\sqrt[3]{%%0%%}"],
@@ -162,6 +51,7 @@ export const stdlib: Map<string, string> = new Map([
     ["spearman", "\\operatorname{spearman}(%%0%%,%%1%%)"],
     ["count", "\\operatorname{count}(%%0%%)"],
     ["total", "\\operatorname{total}(%%0%%)"],
+    ["length", "\\operatorname{length}(%%0%%)"],
 
     ["join", "\\operatorname{join}(%%0%%,%%1%%)"],
     ["sort", "\\operatorname{sort}(%%0%%)"],
@@ -204,21 +94,16 @@ export const stdlib: Map<string, string> = new Map([
     ["sign", "\\operatorname{sign}(%%0%%)"],
     ["nPr", "\\operatorname{nPr}(%%0%%,%%1%%)"],
     ["nCr", "\\operatorname{nCr}(%%0%%,%%1%%)"],
-    ["abs", "\\left|%%0%%\\right|"]
+    ["abs", "\\left|%%0%%\\right|"],
+    ["factorial", "(%%0%%)!"],
+    ["neg", "(-(%%0%%))"]
 ]);
 
 export const stdlibName: Map<string, string[]> = new Map([
     ["getx", ["point"]],
     ["gety", ["point"]],
-    ["index", ["list", "index"]],
-    ["index1", ["list", "index"]],
-    ["ternary", ["condition", "then", "else"]],
     ["range", ["from", "to", "step"]],
     ["rangeInclusive", ["from", "to", "step"]],
-    
-    ["pi", []],
-    ["tau", []],
-    ["infinity", []],
 
     ["sqrt", ["value"]],
     ["cbrt", ["value"]],
@@ -266,6 +151,7 @@ export const stdlibName: Map<string, string[]> = new Map([
     ["spearman", ["list1", "list2"]],
     ["count", ["list"]],
     ["total", ["list"]],
+    ["length", ["list"]],
 
     ["join", ["list1", "list2"]],
     ["sort", ["list"]],
@@ -292,4 +178,23 @@ export const stdlibName: Map<string, string[]> = new Map([
     ["integral", ["expr", "var", "from", "to"]],
     ["sum", ["expr", "var", "from", "to"]],
     ["prod", ["expr", "var", "from", "to"]],
+
+    ["polygon", ["pointsList"]],
+    ["distance", ["point1", "point2"]],
+    ["midpoint", ["point1", "point2"]],
+
+    ["rgb", ["red", "green", "blue"]],
+    ["hsv", ["hue", "saturation", "value"]],
+
+    ["lcm", ["list"]],
+    ["gcd", ["list"]],
+    ["ceil", ["value"]],
+    ["floor", ["value"]],
+    ["round", ["value"]],
+    ["sign", ["value"]],
+    ["nPr", ["itemCount", "permutationCount"]],
+    ["nCr", ["itemCount", "combinationCount"]],
+    ["abs", ["value"]],
+    ["factorial", ["value"]],
+    ["neg", ["value"]]
 ]);
