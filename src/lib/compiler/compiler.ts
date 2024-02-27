@@ -142,6 +142,9 @@ export function compile(ast: AST, first = false): string {
                 default:
                     return "";
             }
+        
+        case ASTType.Ellipsis:
+            return "...";
 
         default:
             return "";

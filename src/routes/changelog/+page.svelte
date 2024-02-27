@@ -24,6 +24,8 @@
     <li>Remove <code>ternary</code> stdlib function</li>
     <li>Add <code>neg</code> (negate) stdlib function</li>
     <li>Make LaTeX outputs simpler and have less unnecessary parentheses</li>
+    <li>Add ellipsis for list generation (<code>[1, 2, ..., 5]</code>)</li>
+    <li>Add scientific notation support (<code>1.2e34</code>)</li>
 </ul>
 
 <hr>

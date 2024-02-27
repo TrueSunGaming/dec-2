@@ -31,7 +31,8 @@ export enum ASTType {
     LaTeX,
     LaTeXConcat,
     Index,
-    Conditional
+    Conditional,
+    Ellipsis
 }
 
 export interface AST {

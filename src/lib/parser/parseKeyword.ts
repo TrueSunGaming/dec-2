@@ -31,6 +31,8 @@ export function parseKeyword(tokens: Token[]): AST {
             return parseReplacement(tokens, "\\pi");
         case "tau":
             return parseReplacement(tokens, "\\tau");
+        case "e":
+            return parseReplacement(tokens, "e");
         case "if":
             return parseIf(tokens);
         default:
