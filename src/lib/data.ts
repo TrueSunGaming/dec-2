@@ -214,7 +214,8 @@ export const stdlib: Map<string, string> = new Map([
     ["nPr", "\\operatorname{nPr}(%%0%%,%%1%%)"],
     ["nCr", "\\operatorname{nCr}(%%0%%,%%1%%)"],
     ["abs", "\\left|%%0%%\\right|"],
-    ["factorial", "(%%0%%)!"]
+    ["factorial", "(%%0%%)!"],
+    ["neg", "(-(%%0%%))"]
 ]);
 
 export const stdlibName: Map<string, string[]> = new Map([
@@ -313,7 +314,8 @@ export const stdlibName: Map<string, string[]> = new Map([
     ["nPr", ["itemCount", "permutationCount"]],
     ["nCr", ["itemCount", "combinationCount"]],
     ["abs", ["value"]],
-    ["factorial", ["value"]]
+    ["factorial", ["value"]],
+    ["neg", ["value"]]
 ]);
 
 export const macroReplaceable: ASTType[] = [
