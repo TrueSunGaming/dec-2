@@ -1,5 +1,6 @@
-import { macroReplaceable } from "$lib/data";
+import { macroReplaceable } from "$lib/data/data";
 import type { AST } from "$lib/parser/AST";
+import { simplifyAST } from "$lib/parser/simplifyAST";
 
 export function buildMacroFromAST(ast: AST, paramMap: Map<string, AST>): AST {
     const res: AST = structuredClone(ast);
@@ -12,5 +13,5 @@ export function buildMacroFromAST(ast: AST, paramMap: Map<string, AST>): AST {
         res.parts[i] = buildMacroFromAST(res.parts[i], paramMap);
     }
 
-    return res;
+    return simplifyAST(res);
 }

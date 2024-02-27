@@ -21,6 +21,8 @@
     <li>Add <code>if</code>/<code>elif</code>/<code>else</code> statements</li>
     <li>Add ternary operator (<code>x {">"} 1 ? 2 : 3</code>)</li>
     <li>Remove <code>ternary</code> stdlib function</li>
+    <li>Add <code>neg</code> stdlib function</li>
+    <li>LaTeX outputs are now simpler and have less unnecessary parentheses</li>
 </ul>
 
 <hr>

@@ -1,6 +1,7 @@
-import { keywords, operatorMap } from "./data";
+import { keywords } from "./data/data";
 import { escapeRegExp } from "./formatRegEx";
 import { range } from "./range";
+import { operatorMap } from "./data/operators";
 
 export enum TokenType {
     Identifier,

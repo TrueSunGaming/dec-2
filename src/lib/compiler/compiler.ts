@@ -1,14 +1,17 @@
 import { ASTType, type AST } from "../parser/AST";
-import { stdlib } from "../data";
-import { desmosFormat } from "./desmosFormat";
+import { stdlib } from "../data/stdlib";
+import { compileFormat, desmosFormat } from "./desmosFormat";
 import { generateTokens, type PositionedToken } from "../lexer";
 import { createSyntaxTree } from "../parser/parser";
 import { buildMacro } from "./buildMacro";
+import { simplifyAST } from "$lib/parser/simplifyAST";
 
 export const macros: Map<string, [string[], AST]> = new Map();
 
 export function compile(ast: AST, first = false): string {
     if (first) macros.clear();
+
+    ast = simplifyAST(ast);
 
     switch(ast.type) {
         case ASTType.Program:
@@ -143,16 +146,6 @@ export function compile(ast: AST, first = false): string {
         default:
             return "";
     }
-}
-
-export function compileFormat(res: string): string {
-    return res
-        .replace(/\(/g, "\\left(")
-        .replace(/\)/g, "\\right)")
-        .replace(/\[/g, "\\left[")
-        .replace(/\]/g, "\\right]")
-        .replace(/\\\{/g, "\\left\\{")
-        .replace(/\\\}/g, "\\right\\}");
 }
 
 export function fullCompile(code: string): string {

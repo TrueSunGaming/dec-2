@@ -1,4 +1,6 @@
-import { keywords, operatorMap, stdlibName } from "$lib/data";
+import { keywords } from "$lib/data/data";
+import { stdlibName } from "$lib/data/stdlib";
+import { operatorMap } from "$lib/data/operators";
 import { escapeRegExp } from "$lib/formatRegEx";
 import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api";
 

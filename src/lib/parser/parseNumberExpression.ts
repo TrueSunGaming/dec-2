@@ -1,5 +1,5 @@
 import { ASTType, type AST } from "./AST";
-import { OperationType, Operator, operatorAST, operatorMap, orderOfOperations } from "$lib/data";
+import { OperationType, Operator, operatorAST, operatorMap, orderOfOperations } from "$lib/data/operators";
 import { TokenType, type Token } from "$lib/lexer";
 import { parseIndexing } from "./parseIndexing";
 import { parseLaTeX } from "./parseLaTeX";
